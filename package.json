@@ -1,0 +1,27 @@
+{
+  "name": "moonboots-express",
+  "description": "Express plugin for moonboots.",
+  "version": "0.1.0",
+  "author": {
+    "url": "http://lukekarrys.com",
+    "email": "luke@lukekarrys.com",
+    "name": "Luke Karrys"
+  },
+  "bugs": {
+    "url": "https://github.com/lukekarrys/moonboots-express/issues"
+  },
+  "homepage": "https://github.com/lukekarrys/moonboots-express",
+  "keywords": [
+    "moonboots",
+    "express"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:lukekarrys/moonboots-express.git"
+  },
+  "scripts": {
+    "test": "make test"
+  }
+}
