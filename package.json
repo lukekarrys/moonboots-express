@@ -1,7 +1,7 @@
 {
   "name": "moonboots-express",
   "description": "Express plugin for moonboots.",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "author": {
     "url": "http://lukekarrys.com",
     "email": "luke@lukekarrys.com",
@@ -9,6 +9,18 @@
   },
   "bugs": {
     "url": "https://github.com/lukekarrys/moonboots-express/issues"
+  },
+  "dependencies": {
+    "moonboots": "^2.0.3",
+    "underscore": "^1.6.0",
+    "wildemitter": "^1.0.1"
+  },
+  "devDependencies": {
+    "express": "^4.0.0",
+    "jshint": "^2.5.0",
+    "lab": "^3.0.0",
+    "precommit-hook": "^0.4.1",
+    "supertest": "^0.10.0"
   },
   "homepage": "https://github.com/lukekarrys/moonboots-express",
   "keywords": [
