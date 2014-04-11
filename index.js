@@ -83,12 +83,14 @@ MoonbootsExpress.prototype.attachRoutes = function () {
 
 MoonbootsExpress.prototype.attachRoute = function (options) {
     var moonboots = this.moonboots;
-    var sourceFn = options.source.bind(moonboots);
+    var source = function (res) {
+        options.source.call(moonboots, function (err, src) {
+            res.send(src);
+        });
+    };
 
     this.server.get(options.path, function (req, res) {
-        var sendSource = partial(sourceFn, function (err, source) {
-            res.send(source);
-        });
+        var sendSource = partial(source, res);
 
         res.set('Content-Type', 'text/' + options.contentType + '; charset=utf-8');
         res.set('Cache-Control', options.cachePeriod ? 'public, max-age=' + options.cachePeriod : 'no-store');
