@@ -43,7 +43,7 @@ app.listen(process.env.PORT);
 `moonboots-express` is doing a few things for you:
 
 1. Create a `GET` route for your app's HTML at `options.appPath` with the correct contentType
-2. Create a `GET` route for your app's JS (and CSS if necessary) with the correct contentTypes
+2. Create a `GET` route for your app's JS (and CSS if necessary) with the correct contentType
 3. If you are in `developmentMode` your JS/CSS will be re-bundled on each request
 4. If you are not in `developmentMode` your JS/CSS will be cached and the cache-control headers will be set to `cachePeriod`
 5. Any requests made before moonboots is ready (which can happen if you're doing complex things in the `beforeBuild` functions) will wait for it to be ready before they are served. If you want an example of this, run `node sample/server --complex` and make a request to `http://localhost:3001`. The request will wait ~5 seconds before completing, but any subsequent requests will be instant.
