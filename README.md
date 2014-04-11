@@ -8,6 +8,10 @@ moonboots-express
 
 Just like [Moonboots](https://github.com/HenrikJoreteg/moonboots) but it will create the necessary HTML, JS, CSS routes for you in your express server with the correct content-types and cache-control.
 
+## Install
+
+`npm install moonboots-express --save`
+
 ## Usage
 
 Create a new instance of `moonboots-express` and pass in the necessary options, including an express server. The `moonboots` option will be passed directly to Moonboots proper. `moonboots-express` will add the necessary routes to your express server. Outside of that, you can setup your express server however you normally would.
@@ -33,9 +37,9 @@ app.listen(process.env.PORT);
 
 ## API
 
-- `appPath`: (default: '*') The default is to serve the app HTML for all routes. You can pass in a path just as you would to `app.get(path)` to change it.
+- `appPath`: (default: `*`) The default is to serve the app HTML for all routes. You can pass in a path just as you would to `app.get(path)` to change it.
 - `server`: This is your express server and it is required. `moonboots-express` will add routes for HTML and JS (and CSS if necessary).
-- `cachePeriod`: (default: 1 year) How long in miliseconds that you want to cache the CSS and JS when not in `developmentMode`.
+- `cachePeriod`: (default: `1 year`) How long in miliseconds that you want to cache the CSS and JS when `developmentMode: false`.
 - `moonboots`: This is an object that is passed directly to [Moonboots](https://github.com/HenrikJoreteg/moonboots). See the [documentation](https://github.com/HenrikJoreteg/moonboots#options) for what options are available.
 
 ## What's happening?
@@ -65,7 +69,7 @@ Run `npm test`
 
 ## Sample
 
-Run `npm start` and make sure you have a grey (#ccc) background and the `Woo! View source to see what rendered me` message in your window.
+Run `npm start` and make sure you have a grey (`#ccc`) background and the `Woo! View source to see what rendered me.` message in your window.
 
 #License
 
