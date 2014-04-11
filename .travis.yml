@@ -1,5 +1,5 @@
 language: node_js
-script: "npm update npm -g && npm test"
+before_install: "npm update npm -g"
 node_js:
     - "0.10"
     - "0.8"
