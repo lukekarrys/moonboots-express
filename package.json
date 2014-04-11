@@ -11,8 +11,9 @@
     "url": "https://github.com/lukekarrys/moonboots-express/issues"
   },
   "dependencies": {
+    "defaults": "^1.0.0",
     "moonboots": "^2.0.3",
-    "underscore": "^1.6.0"
+    "partial": "^0.0.3"
   },
   "devDependencies": {
     "express": "^4.0.0",

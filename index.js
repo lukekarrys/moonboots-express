@@ -1,10 +1,11 @@
 var Moonboots = require('moonboots');
-var _ = require('underscore');
 var Emitter = require('events').EventEmitter;
+var defaults = require('defaults');
+var partial = require('partial');
 
 
 function MoonbootsExpress(options) {
-    if (!_.isObject(options)) {
+    if (options !== Object(options)) {
         throw new Error('Invalid options');
     } else if (!options.server) {
         throw new Error('You must supply an express `server` in your options.');
@@ -18,9 +19,9 @@ function MoonbootsExpress(options) {
     this.moonboots.on('log', this.emitPassThrough.bind(this, 'log'));
 
     this.server = options.server;
-    this.options = _.omit(options, 'moonboots', 'server');
+    this.options = options;
 
-    _.defaults(this.options, {
+    defaults(this.options, {
         cachePeriod: 86400000 * 360,
         appPath: '*'
     });
@@ -85,18 +86,14 @@ MoonbootsExpress.prototype.attachRoute = function (options) {
     var sourceFn = options.source.bind(moonboots);
 
     this.server.get(options.path, function (req, res) {
-        var sendSource = _.partial(sourceFn, function (err, source) {
+        var sendSource = partial(sourceFn, function (err, source) {
             res.send(source);
         });
 
         res.set('Content-Type', 'text/' + options.contentType + '; charset=utf-8');
         res.set('Cache-Control', options.cachePeriod ? 'public, max-age=' + options.cachePeriod : 'no-store');
 
-        if (this.ready) {
-            sendSource();
-        } else {
-            moonboots.on('ready', sendSource);
-        }
+        this.ready ? sendSource() : moonboots.on('ready', sendSource);
     }.bind(this));
 };
 
