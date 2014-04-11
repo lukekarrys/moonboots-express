@@ -53,7 +53,13 @@ MoonbootsExpress.prototype.emitPassThrough = function () {
 };
 
 MoonbootsExpress.prototype.filename = function (filename, ext) {
-    return '/' + encodeURIComponent(filename) + '.*.' + (this.moonboots.config.minify ? 'min.' : '') + ext;
+    return [
+        this.moonboots.config.resourcePrefix,
+        encodeURIComponent(filename),
+        '.*.',
+        (this.moonboots.config.minify ? 'min.' : ''),
+        ext
+    ].join('');
 };
 
 MoonbootsExpress.prototype.attachRoutes = function () {
