@@ -19,6 +19,7 @@ function MoonbootsExpress(options) {
     this.moonboots.on('log', this.emitPassThrough.bind(this, 'log'));
 
     this.server = options.server;
+    this.handlers = options.handlers || {};
     this.options = options;
 
     defaults(this.options, {
@@ -60,7 +61,7 @@ MoonbootsExpress.prototype.attachRoutes = function () {
         path: this.filename(this.moonboots.config.jsFileName, 'js'),
         contentType: 'javascript',
         cachePeriod: this.options.cachePeriod,
-        source: this.moonboots.jsSource
+        source: this.handlers.js || this.moonboots.jsSource
     });
 
     if (this.moonboots.config.stylesheets.length) {
@@ -68,14 +69,14 @@ MoonbootsExpress.prototype.attachRoutes = function () {
             path: this.filename(this.moonboots.config.cssFileName, 'css'),
             contentType: 'css',
             cachePeriod: this.options.cachePeriod,
-            source: this.moonboots.cssSource
+            source: this.handlers.css || this.moonboots.cssSource
         });
     }
 
     this.attachRoute({
         path: this.options.appPath,
         contentType: 'html',
-        source: function (cb) {
+        source: this.handlers.html || function (cb) {
             cb(null, this.htmlSource());
         }
     });

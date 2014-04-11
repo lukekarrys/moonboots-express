@@ -6,16 +6,12 @@ var stylesheets = [__dirname + '/../sample/stylesheets/style.css'];
 var request = require('supertest');
 var port = 3700;
 
-function validCSSRes(moonboots, res, cacheControl) {
+function validCSSRes(moonboots, res, expect) {
     Lab.expect(moonboots.ready).to.equal(true);
     Lab.expect(res.statusCode).to.equal(200);
     Lab.expect(res.headers['content-type']).to.equal('text/css; charset=utf-8');
-    Lab.expect(res.headers['cache-control']).to.equal(cacheControl);
-    if (cacheControl === 'no-store') {
-        Lab.expect(res.text.indexOf('/* SAMPLE STYLESHEET */')).to.equal(0);
-    } else {
-        Lab.expect(res.text.indexOf('body{')).to.equal(0);
-    }
+    Lab.expect(res.headers['cache-control']).to.equal(expect.cacheControl);
+    Lab.expect(res.text.indexOf(expect.source)).to.equal(0);
 }
 
 function css404(moonboots, res) {
@@ -43,7 +39,40 @@ Lab.experiment('CSS Routes', function () {
         request(server)
         .get('/styles.HASH.min.css')
         .expect(function (res) {
-            validCSSRes(moonboots, res, 'public, max-age=' + 86400000 * 360);
+            validCSSRes(moonboots, res, {
+                cacheControl: 'public, max-age=' + 86400000 * 360,
+                source: 'body{'
+            });
+        })
+        .end(function (err, res) {
+            routeDone(err, res, done);
+        });
+    });
+
+    Lab.test('Specify css source', function (done) {
+        var server = express();
+        var moonboots = new Moonboots({
+            moonboots: {
+                main: mainSample,
+                stylesheets: stylesheets
+            },
+            server: server,
+            handlers: {
+                css: function (cb) {
+                    cb(null, 'html{}');
+                }
+            }
+        });
+
+        server.listen(port++);
+
+        request(server)
+        .get('/styles.HASH.min.css')
+        .expect(function (res) {
+            validCSSRes(moonboots, res, {
+                cacheControl: 'public, max-age=' + 86400000 * 360,
+                source: 'html{}'
+            });
         })
         .end(function (err, res) {
             routeDone(err, res, done);
@@ -66,7 +95,10 @@ Lab.experiment('CSS Routes', function () {
         request(server)
         .get('/styles.nonCached.css')
         .expect(function (res) {
-            validCSSRes(moonboots, res, 'no-store');
+            validCSSRes(moonboots, res, {
+                cacheControl: 'no-store',
+                source: '/* SAMPLE STYLESHEET */'
+            });
         })
         .end(function (err, res) {
             routeDone(err, res, done);

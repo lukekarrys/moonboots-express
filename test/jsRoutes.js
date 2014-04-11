@@ -5,17 +5,12 @@ var mainSample = __dirname + '/../sample/app/app.js';
 var request = require('supertest');
 var port = 3600;
 
-function validJSRes(moonboots, res, cacheControl) {
+function validJSRes(moonboots, res, expect) {
     Lab.expect(moonboots.ready).to.equal(true);
     Lab.expect(res.statusCode).to.equal(200);
     Lab.expect(res.headers['content-type']).to.equal('text/javascript; charset=utf-8');
-    Lab.expect(res.headers['cache-control']).to.equal(cacheControl);
-    Lab.expect(res.text.indexOf('function')).to.equal(1);
-    if (cacheControl === 'no-store') {
-        Lab.expect(res.text.indexOf('(function')).to.equal(0);
-    } else {
-        Lab.expect(res.text.indexOf('!function')).to.equal(0);
-    }
+    Lab.expect(res.headers['cache-control']).to.equal(expect.cacheControl);
+    Lab.expect(res.text.indexOf(expect.source)).to.equal(0);
 }
 
 function js404(moonboots, res) {
@@ -42,7 +37,10 @@ Lab.experiment('JS Routes', function () {
         request(server)
         .get('/app.HASH.min.js')
         .expect(function (res) {
-            validJSRes(moonboots, res, 'public, max-age=' + 86400000 * 360);
+            validJSRes(moonboots, res, {
+                cacheControl: 'public, max-age=' + 86400000 * 360,
+                source: '!function'
+            });
         })
         .end(function (err, res) {
             routeDone(err, res, done);
@@ -64,7 +62,39 @@ Lab.experiment('JS Routes', function () {
         request(server)
         .get('/app.nonCached.js')
         .expect(function (res) {
-            validJSRes(moonboots, res, 'no-store');
+            validJSRes(moonboots, res, {
+                cacheControl: 'no-store',
+                source: '(function'
+            });
+        })
+        .end(function (err, res) {
+            routeDone(err, res, done);
+        });
+    });
+
+    Lab.test('Specify a js source', function (done) {
+        var server = express();
+        var moonboots = new Moonboots({
+            moonboots: {
+                main: mainSample
+            },
+            server: server,
+            handlers: {
+                js: function (cb) {
+                    cb(null, 'alert();');
+                }
+            }
+        });
+
+        server.listen(port++);
+
+        request(server)
+        .get('/app.HASH.min.js')
+        .expect(function (res) {
+            validJSRes(moonboots, res, {
+                cacheControl: 'public, max-age=' + 86400000 * 360,
+                source: 'alert();'
+            });
         })
         .end(function (err, res) {
             routeDone(err, res, done);

@@ -5,12 +5,12 @@ var mainSample = __dirname + '/../sample/app/app.js';
 var request = require('supertest');
 var port = 3500;
 
-function validHTMLRes(moonboots, res) {
+function validHTMLRes(moonboots, res, source) {
     Lab.expect(moonboots.ready).to.equal(true);
     Lab.expect(res.statusCode).to.equal(200);
     Lab.expect(res.headers['content-type']).to.equal('text/html; charset=utf-8');
     Lab.expect(res.headers['cache-control']).to.equal('no-store');
-    Lab.expect(res.text.indexOf('<!DOCTYPE html>')).to.equal(0);
+    Lab.expect(res.text.indexOf(source || '<!DOCTYPE html>')).to.equal(0);
 }
 
 function html404(moonboots, res) {
@@ -38,6 +38,32 @@ Lab.experiment('HTML Routes', function () {
         .get('/')
         .expect(function (res) {
             validHTMLRes(moonboots, res);
+        })
+        .end(function (err, res) {
+            routeDone(err, res, done);
+        });
+    });
+
+    Lab.test('Specify html source', function (done) {
+        var server = express();
+        var moonboots = new Moonboots({
+            moonboots: {
+                main: mainSample
+            },
+            server: server,
+            handlers: {
+                html: function (cb) {
+                    cb(null, '<HTML>');
+                }
+            }
+        });
+
+        server.listen(port++);
+
+        request(server)
+        .get('/')
+        .expect(function (res) {
+            validHTMLRes(moonboots, res, '<HTML>');
         })
         .end(function (err, res) {
             routeDone(err, res, done);
