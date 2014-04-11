@@ -11,6 +11,11 @@ function validJSRes(moonboots, res, cacheControl) {
     Lab.expect(res.headers['content-type']).to.equal('text/javascript; charset=utf-8');
     Lab.expect(res.headers['cache-control']).to.equal(cacheControl);
     Lab.expect(res.text.indexOf('function')).to.equal(1);
+    if (cacheControl === 'no-store') {
+        Lab.expect(res.text.indexOf('(function')).to.equal(0);
+    } else {
+        Lab.expect(res.text.indexOf('!function')).to.equal(0);
+    }
 }
 
 function js404(moonboots, res) {

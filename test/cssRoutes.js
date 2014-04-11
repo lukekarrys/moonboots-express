@@ -14,7 +14,7 @@ function validCSSRes(moonboots, res, cacheControl) {
     if (cacheControl === 'no-store') {
         Lab.expect(res.text.indexOf('/* SAMPLE STYLESHEET */')).to.equal(0);
     } else {
-        Lab.expect(res.text.indexOf('/* SAMPLE STYLESHEET */')).to.equal(-1);
+        Lab.expect(res.text.indexOf('body{')).to.equal(0);
     }
 }
 

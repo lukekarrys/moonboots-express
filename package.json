@@ -12,8 +12,7 @@
   },
   "dependencies": {
     "moonboots": "^2.0.3",
-    "underscore": "^1.6.0",
-    "wildemitter": "^1.0.1"
+    "underscore": "^1.6.0"
   },
   "devDependencies": {
     "express": "^4.0.0",
