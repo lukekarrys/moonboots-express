@@ -56,7 +56,9 @@ MoonbootsExpress.prototype.filename = function (filename, ext) {
     return [
         this.moonboots.config.resourcePrefix,
         encodeURIComponent(filename),
-        '.*.',
+        '.',
+        (this.moonboots.config.cache ? '[a-z0-9]{8}' : 'nonCached'),
+        '.',
         (this.moonboots.config.minify ? 'min.' : ''),
         ext
     ].join('');

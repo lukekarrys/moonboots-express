@@ -37,7 +37,7 @@ Lab.experiment('CSS Routes', function () {
         server.listen(port++);
 
         request(server)
-        .get('/styles.HASH.min.css')
+        .get('/styles.abc123de.min.css')
         .expect(function (res) {
             validCSSRes(moonboots, res, {
                 cacheControl: 'public, max-age=' + 86400000 * 360,
@@ -67,7 +67,7 @@ Lab.experiment('CSS Routes', function () {
         server.listen(port++);
 
         request(server)
-        .get('/styles.HASH.min.css')
+        .get('/styles.abc123de.min.css')
         .expect(function (res) {
             validCSSRes(moonboots, res, {
                 cacheControl: 'public, max-age=' + 86400000 * 360,

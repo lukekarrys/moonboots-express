@@ -35,7 +35,7 @@ Lab.experiment('JS Routes', function () {
         server.listen(port++);
 
         request(server)
-        .get('/app.HASH.min.js')
+        .get('/app.abc123de.min.js')
         .expect(function (res) {
             validJSRes(moonboots, res, {
                 cacheControl: 'public, max-age=' + 86400000 * 360,
@@ -89,7 +89,7 @@ Lab.experiment('JS Routes', function () {
         server.listen(port++);
 
         request(server)
-        .get('/app.HASH.min.js')
+        .get('/app.abc123de.min.js')
         .expect(function (res) {
             validJSRes(moonboots, res, {
                 cacheControl: 'public, max-age=' + 86400000 * 360,
