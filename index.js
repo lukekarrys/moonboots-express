@@ -21,16 +21,20 @@ function MoonbootsExpress(options) {
     this.options = _.omit(options, 'moonboots', 'server');
 
     _.defaults(this.options, {
-        cachePeriod: options.moonboots.developmentMode ? 0 : 86400000 * 360,
+        cachePeriod: 86400000 * 360,
         appPath: '*'
     });
+
+    // Force cachePeriod to 0 in developmentMode
+    if (this.moonboots.config.developmentMode) {
+        this.options.cachePeriod = 0;
+    }
 
     this.attachRoutes();
 
     return this;
 }
 
-// Inherit from wildemitter
 MoonbootsExpress.prototype = Object.create(Emitter.prototype, {
     constructor: {
         value: MoonbootsExpress
@@ -46,20 +50,26 @@ MoonbootsExpress.prototype.emitPassThrough = function () {
     this.emit.apply(this, arguments);
 };
 
+MoonbootsExpress.prototype.filename = function (filename, ext) {
+    return '/' + encodeURIComponent(filename) + '.*.' + (this.moonboots.config.minify ? 'min.' : '') + ext;
+};
+
 MoonbootsExpress.prototype.attachRoutes = function () {
     this.attachRoute({
-        path: '/' + encodeURIComponent(this.moonboots.config.jsFileName) + '*.js',
+        path: this.filename(this.moonboots.config.jsFileName, 'js'),
         contentType: 'javascript',
         cachePeriod: this.options.cachePeriod,
         source: this.moonboots.jsSource
     });
 
-    this.attachRoute({
-        path: '/' + encodeURIComponent(this.moonboots.config.cssFileName) + '*.css',
-        contentType: 'css',
-        cachePeriod: this.options.cachePeriod,
-        source: this.moonboots.cssSource
-    });
+    if (this.moonboots.config.stylesheets.length) {
+        this.attachRoute({
+            path: this.filename(this.moonboots.config.cssFileName, 'css'),
+            contentType: 'css',
+            cachePeriod: this.options.cachePeriod,
+            source: this.moonboots.cssSource
+        });
+    }
 
     this.attachRoute({
         path: this.options.appPath,

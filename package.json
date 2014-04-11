@@ -34,6 +34,7 @@
     "url": "git@github.com:lukekarrys/moonboots-express.git"
   },
   "scripts": {
-    "test": "make test"
+    "test": "make test",
+    "start": "node sample/server"
   }
 }

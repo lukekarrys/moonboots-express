@@ -48,5 +48,31 @@ Lab.experiment('Init', function () {
         Lab.expect(moonboots.options.cachePeriod).to.equal(86400000 * 360);
         done();
     });
+
+    Lab.test('Cache period can be set', function (done) {
+        var moonboots = new Moonboots({
+            moonboots: {
+                main: mainSample
+            },
+            cachePeriod: 1000,
+            server: express()
+        });
+
+        Lab.expect(moonboots.options.cachePeriod).to.equal(1000);
+        done();
+    });
+
+    Lab.test('appPath can be set', function (done) {
+        var moonboots = new Moonboots({
+            moonboots: {
+                main: mainSample
+            },
+            appPath: '/app/path',
+            server: express()
+        });
+
+        Lab.expect(moonboots.options.appPath).to.equal('/app/path');
+        done();
+    });
 });
 

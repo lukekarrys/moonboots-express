@@ -6,7 +6,6 @@ var app = express();
 var complex = process.argv.join(' ').indexOf('--complex') > -1;
 
 var moonboots = new MoonbootsExpress({
-    appPath: '*',
     moonboots: {
         main: __dirname + '/app/app.js',
         developmentMode: !complex,
