@@ -40,7 +40,7 @@ app.listen(process.env.PORT);
 - `appPath`: (default: `*`) The default is to serve the app HTML for all routes. You can pass in a path just as you would to `app.get(path)` to change it.
 - `server`: This is your express server and it is required. `moonboots-express` will add routes for HTML and JS (and CSS if necessary).
 - `cachePeriod`: (default: `1 year`) How long in miliseconds that you want to cache the CSS and JS when `developmentMode: false`.
-- `handlers`: An object with `js`, `css`, and/or `html` functions. Each will be called with `cb` param with the signature `cb(null, src)`. These will override the source for any default moonboots handlers.
+- `handlers`: An object with `js`, `css`, and/or `html` functions. Each will be called with `cb` param with the signature `cb(err, src)`. These will override the source for any default moonboots handlers.
 - `moonboots`: This is an object that is passed directly to [Moonboots](https://github.com/HenrikJoreteg/moonboots). See the [documentation](https://github.com/HenrikJoreteg/moonboots#options) for what options are available.
 
 ## What's happening?
