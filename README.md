@@ -6,7 +6,7 @@ moonboots-express
 
 **Express plugin for moonboots.**
 
-Just like [Moonboots](https://github.com/HenrikJoreteg/moonboots) but it will create the necessary HTML, JS, CSS routes for you in your express server with the correct content-types and cache-control.
+Just like [Moonboots](https://github.com/HenrikJoreteg/moonboots) but it will create the necessary HTML, JS, CSS routes for you in your Express server with the correct content-types and cache-control.
 
 
 ## Install
@@ -30,7 +30,7 @@ var app = express();
 var moonboots = new Moonboots({
     server: app,
     moonboots: {
-        main: __dirname + '/app.js'
+        main: __dirname + '/clientapp/app.js'
     }
 });
 
@@ -41,10 +41,10 @@ app.listen(process.env.PORT);
 ## API
 
 - `appPath`: (default: `*`) The default is to serve the app HTML for all routes. You can pass in a path just as you would to `app.get(path)` to change it.
-- `server`: This is your express server and it is required. `moonboots-express` will add routes for HTML and JS (and CSS if necessary).
+- `server`: This is your Express server and it is required. `moonboots-express` will add routes for HTML and JS (and CSS if necessary).
 - `cachePeriod`: (default: `1 year`) How long in miliseconds that you want to cache the CSS and JS when `developmentMode: false`.
-- `middleware`: An object with `js`, `css`, and/or `html` properties. Each can be a single function or an array of functions and will be used as middleware for that particular route. See the [Express Routing documentation](http://expressjs.com/3x/api.html#app.VERB) for more information.
-- `render`: A function with the signature `(req, res)` that will be called to set the content of the HTML route. It will have `resourcePrefix`, `cssFileName`, and `jsFileName` set on `res.locals`. By default this will just do `res.send(defaultMoonbootsHTMLSource)`.
+- `middleware`: An object with `js`, `css`, and/or `html` properties. Each can be a single function or an array of functions and will be used as middleware for that particular route. See the [Express routing documentation](http://expressjs.com/3x/api.html#app.VERB) for more information.
+- `render`: A function with the signature `(req, res)` that will be called to set the response of the HTML route. It will have `resourcePrefix`, `cssFileName`, and `jsFileName` set on `res.locals`. By default this will just do `res.send` with the [default Moonboots HTML source](https://github.com/HenrikJoreteg/moonboots/blob/master/index.js#L176-L180).
 - `moonboots`: This is an object that is passed directly to [Moonboots](https://github.com/HenrikJoreteg/moonboots). See the [documentation](https://github.com/HenrikJoreteg/moonboots#options) for what options are available.
 
 
@@ -63,7 +63,7 @@ app.listen(process.env.PORT);
 
 If you don't want your HTML to be the default content served by Moonboots you can use the `render` option. Here's an example where a jade file is rendered using the variables from `res.locals`.
 
-**/views/index.jade**
+**views/index.jade**
 ```jade
 doctype html
 html
@@ -72,6 +72,7 @@ html
     script(src=locals.resourcePrefix + locals.jsFileName)
 ```
 
+**server.js**
 ```js
 var express = require('express');
 var Moonboots = require('moonboots-express');
@@ -82,12 +83,12 @@ server.set('view engine', 'jade');
 
 var moonboots = new Moonboots({
     moonboots: {
-        main: mainSample,
+        main: __dirname + '/clientapp/app.js',
         resourcePrefix: '/assets/'
     },
     server: server,
     render: function (req, res) {
-        // necessary res.locals are set my moonboots-express
+        // necessary res.locals are set by moonboots-express
         res.render('index');
     }
 });
@@ -98,13 +99,13 @@ var moonboots = new Moonboots({
 
 ### Routes
 
-You should almost always set your routes **before** created a new `moonboots-express` instance. This is because the default `appPath` is '*', so this route will take precedence over anything created after it.
+You should almost always set your routes **before** creating your `moonboots-express` instance. This is because the default `appPath` is `*`, so this route will take precedence over anything created after it.
 
 ### Middleware
 
-Since `moonboots-express` is just attaching a few routes to your server, you can use `app.use` as you normally would to set Express middlewares. Here's an example where a header is set for all routes, including the ones created by `moonboots-express`.
+Since `moonboots-express` is just attaching a few routes to your server, you can use `app.use` as you normally would to set Express middleware functions. Here's an example where a header is set for all routes, including the ones created by `moonboots-express`.
 
-```
+```js
 var express = require('express');
 var Moonboots = require('moonboots-express');
 var app = express();
@@ -115,14 +116,14 @@ app.use('*', function (req, res, next) {
 });
 
 new Moonboots({
-    moonboots: { main: mainSample },
+    moonboots: { main: __dirname + '/clientapp/app.js' },
     server: app
 });
 ```
 
-If you want to run route specific middleware use the `middleware` config options. Here's an example where a different header is set for each route:
+If you want to run route specific middleware use the `middleware` config option. Here's an example where a different header is set for each route:
 
-```
+```js
 var express = require('express');
 var Moonboots = require('moonboots-express');
 var app = express();
@@ -149,11 +150,11 @@ new Moonboots({
 
 ## Logging
 
-`moonboots-express` will emit all the same log events that `moonboots` does, so if you wanted to log everything from moonboots you could do:
+`moonboots-express` will emit all the same log events that `moonboots` does, so if you wanted to log everything from Moonboots you could do:
 
 ```js
 var Moonboots = require('moonboots-express');
-var moonboots = new Moonboots(/* OPTIONS */);
+var moonboots = new Moonboots(options);
 
 moonboots.on('log', console.log);
 ```
