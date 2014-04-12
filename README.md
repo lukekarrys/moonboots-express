@@ -99,7 +99,24 @@ var moonboots = new Moonboots({
 
 ### Routes
 
-You should almost always set your routes **before** creating your `moonboots-express` instance. This is because the default `appPath` is `*`, so this route will take precedence over anything created after it.
+You should almost always set your routes **before** creating your `moonboots-express` instance. This is because the default `appPath` is `*`, so this route will take precedence over anything created after it. Here's an example of a **Bad Idea**:
+
+```js
+var express = require('express');
+var Moonboots = require('moonboots-express');
+var app = express();
+
+// The route should go here
+
+new Moonboots({
+    moonboots: { main: __dirname + '/clientapp/app.js' },
+    server: app
+});
+
+app.get('/my-static-page', function (req, res) {
+    // Whoops, this is unreachable!
+});
+```
 
 ### Middleware
 
