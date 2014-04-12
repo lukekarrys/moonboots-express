@@ -44,17 +44,16 @@ Lab.experiment('HTML Routes', function () {
         });
     });
 
-    Lab.test('Specify html source', function (done) {
+    Lab.test('Specify html render function with res.send', function (done) {
         var server = express();
         var moonboots = new Moonboots({
             moonboots: {
-                main: mainSample
+                main: mainSample,
+                developmentMode: true
             },
             server: server,
-            handlers: {
-                html: function (cb) {
-                    cb(null, '<HTML>');
-                }
+            render: function (req, res) {
+                res.send('<HTML><script src="' + res.locals.resourcePrefix + res.locals.jsFileName + '">');
             }
         });
 
@@ -63,7 +62,43 @@ Lab.experiment('HTML Routes', function () {
         request(server)
         .get('/')
         .expect(function (res) {
-            validHTMLRes(moonboots, res, '<HTML>');
+            validHTMLRes(moonboots, res, '<HTML><script src="/app.nonCached.js">');
+        })
+        .end(function (err, res) {
+            routeDone(err, res, done);
+        });
+    });
+
+    Lab.test('Specify html render function with res.render and jade', function (done) {
+        var server = express();
+
+        server.set('views', __dirname + '/../sample/');
+        server.set('view engine', 'jade');
+
+        var moonboots = new Moonboots({
+            moonboots: {
+                main: mainSample,
+                developmentMode: true,
+                resourcePrefix: '/assets/'
+            },
+            server: server,
+            render: function (req, res) {
+                res.render('index');
+            }
+        });
+
+        server.listen(port++);
+
+        request(server)
+        .get('/')
+        .expect(function (res) {
+            var resp = [
+                '<!DOCTYPE html><html><head>',
+                '<link rel="stylesheet" href="/assets/styles.nonCached.css">',
+                '<script src="/assets/app.nonCached.js"></script>',
+                '</head></html>'
+            ].join('');
+            validHTMLRes(moonboots, res, resp);
         })
         .end(function (err, res) {
             routeDone(err, res, done);

@@ -2,6 +2,7 @@ var Moonboots = require('moonboots');
 var Emitter = require('events').EventEmitter;
 var defaults = require('defaults');
 var partial = require('partial');
+var extend = require('xtend');
 
 
 function MoonbootsExpress(options) {
@@ -19,12 +20,19 @@ function MoonbootsExpress(options) {
     this.moonboots.on('log', this.emitPassThrough.bind(this, 'log'));
 
     this.server = options.server;
-    this.handlers = options.handlers || {};
+    this.render = options.render;
+    this.middleware = options.middleware || {};
     this.options = options;
 
     defaults(this.options, {
         cachePeriod: 86400000 * 360,
         appPath: '*'
+    });
+
+    defaults(this.middleware, {
+        js: [],
+        css: [],
+        html: []
     });
 
     // Force cachePeriod to 0 in developmentMode
@@ -52,7 +60,7 @@ MoonbootsExpress.prototype.emitPassThrough = function () {
     this.emit.apply(this, arguments);
 };
 
-MoonbootsExpress.prototype.filename = function (filename, ext) {
+MoonbootsExpress.prototype.path = function (filename, ext) {
     return [
         this.moonboots.config.resourcePrefix,
         encodeURIComponent(filename),
@@ -64,47 +72,86 @@ MoonbootsExpress.prototype.filename = function (filename, ext) {
     ].join('');
 };
 
+MoonbootsExpress.prototype.jsPath = function () {
+    return this.path(this.moonboots.config.jsFileName, 'js');
+};
+
+MoonbootsExpress.prototype.cssPath = function () {
+    return this.path(this.moonboots.config.cssFileName, 'css');
+};
+
 MoonbootsExpress.prototype.attachRoutes = function () {
-    this.attachRoute({
-        path: this.filename(this.moonboots.config.jsFileName, 'js'),
+    var moonboots = this.moonboots;
+
+    this.attachAssetRoute({
+        path: this.jsPath(),
         contentType: 'javascript',
         cachePeriod: this.options.cachePeriod,
-        source: this.handlers.js || this.moonboots.jsSource
+        source: moonboots.jsSource,
+        middleware: this.middleware.js
     });
 
-    if (this.moonboots.config.stylesheets.length) {
-        this.attachRoute({
-            path: this.filename(this.moonboots.config.cssFileName, 'css'),
+    if (moonboots.config.stylesheets.length) {
+        this.attachAssetRoute({
+            path: this.cssPath(),
             contentType: 'css',
             cachePeriod: this.options.cachePeriod,
-            source: this.handlers.css || this.moonboots.cssSource
+            source: moonboots.cssSource,
+            middleware: this.middleware.css
         });
     }
 
-    this.attachRoute({
+    this.attachHTMLRoute({
         path: this.options.appPath,
         contentType: 'html',
-        source: this.handlers.html || function (cb) {
-            cb(null, this.htmlSource());
-        }
+        middleware: this.middleware.html
     });
 };
 
-MoonbootsExpress.prototype.attachRoute = function (options) {
+MoonbootsExpress.prototype.attachHTMLRoute = function (options) {
+    var self = this;
     var moonboots = this.moonboots;
-    var source = function (res) {
+    var source = function (req, res) {
+        if (self.render) {
+            var context = moonboots.htmlContext();
+            for (var ctx in context) {
+                res.locals[ctx] = context[ctx];
+            }
+            res.locals.resourcePrefix = moonboots.config.resourcePrefix;
+            self.render(req, res);
+        } else {
+            res.send(moonboots.htmlSource());
+        }
+    };
+
+    this.attachRoute(extend(options, {
+        source: source
+    }));
+};
+
+MoonbootsExpress.prototype.attachAssetRoute = function (options) {
+    var moonboots = this.moonboots;
+    // The route will respond with moonboots' css/js source fn
+    var source = function (req, res) {
         options.source.call(moonboots, function (err, src) {
             res.send(src);
         });
     };
 
-    this.server.get(options.path, function (req, res) {
-        var sendSource = partial(source, res);
+    this.attachRoute(extend(options, {
+        source: source
+    }));
+};
+
+
+MoonbootsExpress.prototype.attachRoute = function (options) {
+    this.server.get(options.path, options.middleware, function (req, res) {
+        var sendSource = partial(options.source, req, res);
 
         res.set('Content-Type', 'text/' + options.contentType + '; charset=utf-8');
         res.set('Cache-Control', options.cachePeriod ? 'public, max-age=' + options.cachePeriod : 'no-store');
 
-        this.ready ? sendSource() : moonboots.on('ready', sendSource);
+        this.ready ? sendSource() : this.moonboots.on('ready', sendSource);
     }.bind(this));
 };
 

@@ -72,35 +72,6 @@ Lab.experiment('JS Routes', function () {
         });
     });
 
-    Lab.test('Specify a js source', function (done) {
-        var server = express();
-        var moonboots = new Moonboots({
-            moonboots: {
-                main: mainSample
-            },
-            server: server,
-            handlers: {
-                js: function (cb) {
-                    cb(null, 'alert();');
-                }
-            }
-        });
-
-        server.listen(port++);
-
-        request(server)
-        .get('/app.abc123de.min.js')
-        .expect(function (res) {
-            validJSRes(moonboots, res, {
-                cacheControl: 'public, max-age=' + 86400000 * 360,
-                source: 'alert();'
-            });
-        })
-        .end(function (err, res) {
-            routeDone(err, res, done);
-        });
-    });
-
     Lab.test('Moonboots js route 404s properly', function (done) {
         var server = express();
         var moonboots = new Moonboots({

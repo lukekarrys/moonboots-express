@@ -49,36 +49,6 @@ Lab.experiment('CSS Routes', function () {
         });
     });
 
-    Lab.test('Specify css source', function (done) {
-        var server = express();
-        var moonboots = new Moonboots({
-            moonboots: {
-                main: mainSample,
-                stylesheets: stylesheets
-            },
-            server: server,
-            handlers: {
-                css: function (cb) {
-                    cb(null, 'html{}');
-                }
-            }
-        });
-
-        server.listen(port++);
-
-        request(server)
-        .get('/styles.abc123de.min.css')
-        .expect(function (res) {
-            validCSSRes(moonboots, res, {
-                cacheControl: 'public, max-age=' + 86400000 * 360,
-                source: 'html{}'
-            });
-        })
-        .end(function (err, res) {
-            routeDone(err, res, done);
-        });
-    });
-
     Lab.test('Moonboots css route is correct in dev mode', function (done) {
         var server = express();
         var moonboots = new Moonboots({
