@@ -64,7 +64,7 @@ Lab.experiment('JS Routes', function () {
         .expect(function (res) {
             validJSRes(moonboots, res, {
                 cacheControl: 'no-store',
-                source: '(function'
+                source: ';(function'
             });
         })
         .end(function (err, res) {
