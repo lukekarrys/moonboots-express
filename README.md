@@ -78,15 +78,15 @@ var express = require('express');
 var Moonboots = require('moonboots-express');
 var app = express();
 
-server.set('views', __dirname + '/views');
-server.set('view engine', 'jade');
+app.set('views', __dirname + '/views');
+app.set('view engine', 'jade');
 
 var moonboots = new Moonboots({
     moonboots: {
         main: __dirname + '/clientapp/app.js',
         resourcePrefix: '/assets/'
     },
-    server: server,
+    server: app,
     render: function (req, res) {
         // necessary res.locals are set by moonboots-express
         res.render('index');
