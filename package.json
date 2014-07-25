@@ -1,7 +1,7 @@
 {
   "name": "moonboots-express",
   "description": "Express plugin for moonboots.",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "author": {
     "url": "http://lukekarrys.com",
     "email": "luke@lukekarrys.com",
