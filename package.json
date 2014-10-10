@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "defaults": "^1.0.0",
-    "moonboots": "^2.0.6",
+    "moonboots": "^3.0.0",
     "partial": "^0.0.3",
     "xtend": "^2.2.0"
   },
@@ -21,7 +21,7 @@
     "jade": "^1.3.1",
     "jshint": "^2.5.0",
     "lab": "^3.0.0",
-    "precommit-hook": "^0.4.1",
+    "precommit-hook": "^1.0.7",
     "supertest": "^0.10.0"
   },
   "homepage": "https://github.com/lukekarrys/moonboots-express",
@@ -37,6 +37,7 @@
   },
   "scripts": {
     "test": "./node_modules/lab/bin/lab -t 100 -l",
-    "start": "node sample/server"
+    "start": "node sample/server",
+    "lint": "./node_modules/.bin/jshint ."
   }
 }

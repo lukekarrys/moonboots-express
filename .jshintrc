@@ -1,7 +1,5 @@
 {
   "eqeqeq": true,
-  "indent": 4,
-  "trailing": true,
   "unused": true,
   "node": true,
   "browser": false,
@@ -11,6 +9,5 @@
   "loopfunc": true,
   "curly": false,
   "evil": true,
-  "white": true,
   "undef": true
 }
