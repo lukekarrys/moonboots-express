@@ -27,19 +27,25 @@
   },
   "homepage": "https://github.com/lukekarrys/moonboots-express",
   "keywords": [
-    "moonboots",
-    "express"
+    "express",
+    "moonboots"
   ],
   "license": "MIT",
   "main": "index.js",
+  "pre-commit": [
+    "lint",
+    "validate",
+    "test"
+  ],
   "repository": {
     "type": "git",
     "url": "git@github.com:lukekarrys/moonboots-express.git"
   },
   "scripts": {
-    "test": "lab -t 100 -l",
+    "lint": "standard",
     "start": "node sample/server",
-    "lint": "standard"
+    "test": "lab -t 100 -l",
+    "validate": "npm ls"
   },
   "standard": {
     "ignore": [
