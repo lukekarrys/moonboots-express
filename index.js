@@ -1,7 +1,7 @@
 var Moonboots = require('moonboots')
 var Emitter = require('events').EventEmitter
 var defaults = require('defaults')
-var partial = require('partial')
+var partial = require('lodash.partial')
 var extend = require('xtend')
 
 function MoonbootsExpress (options) {
