@@ -41,7 +41,7 @@ lab.experiment('JS Routes', function () {
         .get('/app.abc123de.min.js')
         .expect(function (res) {
           validJSRes(moonboots, res, {
-            cacheControl: 'public, max-age=' + 86400000 * 360,
+            cacheControl: 'public, max-age=' + (86400000 * 360),
             source: '!function'
           })
         })
@@ -97,4 +97,3 @@ lab.experiment('JS Routes', function () {
         })
   })
 })
-

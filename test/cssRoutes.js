@@ -43,7 +43,7 @@ lab.experiment('CSS Routes', function () {
         .get('/styles.abc123de.min.css')
         .expect(function (res) {
           validCSSRes(moonboots, res, {
-            cacheControl: 'public, max-age=' + 86400000 * 360,
+            cacheControl: 'public, max-age=' + (86400000 * 360),
             source: 'body{'
           })
         })
@@ -101,4 +101,3 @@ lab.experiment('CSS Routes', function () {
         })
   })
 })
-
