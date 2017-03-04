@@ -107,4 +107,3 @@ lab.experiment('Middlewares work as expected', function () {
         })
   })
 })
-
