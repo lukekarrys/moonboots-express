@@ -1,6 +1,8 @@
 moonboots-express
 =================
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/lukekarrys/moonboots-express.svg)](https://greenkeeper.io/)
+
 [![NPM](https://nodei.co/npm/moonboots-express.png)](https://nodei.co/npm/moonboots-express/)
 [![Build Status](https://travis-ci.org/lukekarrys/moonboots-express.png?branch=master)](https://travis-ci.org/lukekarrys/moonboots-express)
 
