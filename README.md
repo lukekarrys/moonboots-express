@@ -1,10 +1,11 @@
 moonboots-express
 =================
 
+**Express plugin for moonboots.**
+
 [![NPM](https://nodei.co/npm/moonboots-express.png)](https://nodei.co/npm/moonboots-express/)
 [![Build Status](https://travis-ci.org/lukekarrys/moonboots-express.png?branch=master)](https://travis-ci.org/lukekarrys/moonboots-express)
-
-**Express plugin for moonboots.**
+[![Greenkeeper badge](https://badges.greenkeeper.io/lukekarrys/moonboots-express.svg)](https://greenkeeper.io/)
 
 Just like [Moonboots](https://github.com/HenrikJoreteg/moonboots) but it will create the necessary HTML, JS, CSS routes for you in your Express server with the correct content-types and cache-control.
 
