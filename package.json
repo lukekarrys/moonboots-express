@@ -26,6 +26,11 @@
     "standard": "^10.0.2",
     "supertest": "^3.0.0"
   },
+  "greenkeeper": {
+    "ignore": [
+      "eslint"  
+    ]
+  },
   "homepage": "https://github.com/lukekarrys/moonboots-express",
   "keywords": [
     "express",
