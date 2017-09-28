@@ -17,7 +17,7 @@
     "xtend": "^4.0.1"
   },
   "devDependencies": {
-    "code": "^5.0.0",
+    "code": "^4.0.0",
     "eslint": "^3.19.0",
     "express": "^4.14.1",
     "git-validate": "^2.2.2",
@@ -28,7 +28,9 @@
   },
   "greenkeeper": {
     "ignore": [
-      "eslint"  
+      "code",
+      "eslint",
+      "lab"
     ]
   },
   "homepage": "https://github.com/lukekarrys/moonboots-express",
